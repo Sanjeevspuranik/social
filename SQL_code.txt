@@ -1,0 +1,92 @@
+CREATE TABLE `social`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(200) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `coverPic` VARCHAR(100) NULL,
+  `profilePic` VARCHAR(100) NULL,
+  `city` VARCHAR(45) NULL,
+  `website` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
+);
+
+
+CREATE TABLE `social`.`comments` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `desc` VARCHAR(200) NOT NULL,
+  `createdAt` DATETIME NULL,
+  `userId` INT NOT NULL,
+  `postId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `postId_idx` (`postId` ASC) VISIBLE,
+  INDEX `commentUserId_idx` (`userId` ASC) VISIBLE,
+  CONSTRAINT `commentUserId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `social`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `postId`
+    FOREIGN KEY (`postId`)
+    REFERENCES `social`.`posts` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE `social`.`stories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `img` VARCHAR(200) NOT NULL,
+  `userId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `storyUserId_idx` (`userId` ASC) VISIBLE,
+  CONSTRAINT `storyUserId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `social`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE `social`.`relationships` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `followerUserId` INT NOT NULL,
+  `follwedUserId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `followerUser_idx` (`followerUserId` ASC) VISIBLE,
+  INDEX `followedUser_idx` (`follwedUserId` ASC) VISIBLE,
+  CONSTRAINT `followerUser`
+    FOREIGN KEY (`followerUserId`)
+    REFERENCES `social`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `followedUser`
+    FOREIGN KEY (`follwedUserId`)
+    REFERENCES `social`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE `social`.`likes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT NOT NULL,
+  `postId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `likeeUserId_idx` (`userId` ASC) VISIBLE,
+  INDEX `likePostId_idx` (`postId` ASC) VISIBLE,
+  CONSTRAINT `likeeUserId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `social`.`user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `likePostId`
+    FOREIGN KEY (`postId`)
+    REFERENCES `social`.`posts` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+
